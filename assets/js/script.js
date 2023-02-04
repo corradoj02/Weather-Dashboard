@@ -1,8 +1,9 @@
-// var APIKey = "5c6c4a0c77be5bc599a1ce2c66810feb";
+var APIKey = "5c6c4a0c77be5bc599a1ce2c66810feb";
 // var queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=" + APIKey;
 // var today = dayjs().format("YYYY-MM-DD");
 
 var searchResult = document.querySelector("#search-btn");
+var cityState;
 
 // {
 //     searchResults: JSON.parse(localStorage.getItem(locationSearch.city))
@@ -32,30 +33,56 @@ var searchResult = document.querySelector("#search-btn");
     
     var locationSearch = 
     {
-        city: "",
-        state: "",
+        cityState: cityState,
         lat: 0,
         lon: 0,
     }
     
     
     // function that takes user input from city search, and adds them to the query 
-    // function getCoord() {
-        // var geocode = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "," + "&limit=5&appid=" + APIKey;
-        
-        var showResult = () => {
-        
-        var city = document.querySelector("#citySearch").value;
-        city = city.split(", ");
-        locationSearch.city = city[0];
-        locationSearch.state = city[1];
-        document.querySelector("#citySearch").value = "";
 
-        console.log(locationSearch.city);
-        console.log(locationSearch.state);
-        
+   function getCity(){
+        return localStorage.getItem("city");
     }
 
+        
+    var showResult = () => {
+        
+        var city = document.querySelector("#citySearch").value;
+        city = city.replaceAll(" ", "");
+        locationSearch.cityState = city.toLowerCase();
+        
+        
+        localStorage.setItem("city", city);
+        
+        console.log(locationSearch.cityState);
+        
+        getCoor();
+        document.querySelector("#citySearch").value = "";
+            
+    }
+    
+    function getCoor(){
+        var city = getCity();
+        console.log(city)
+        
+        var geocode = location.reload("http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=5&appid=" + APIKey);
+        
+        fetch(geocode)
+            .then(function (response){
+                if (response.ok){
+                    console.log(response);
+                    response.json().then(function(data) {
+                        console.log(data);
+                        // console.log(data, lat);
+                        // console.log(data, lon)
+                    })
+                }
+            })
+
+        console.log(geocode)
+    }
+    
 
     //  console.log(geocode);
     // }
