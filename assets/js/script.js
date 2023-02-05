@@ -5,13 +5,17 @@ var APIKey = "5c6c4a0c77be5bc599a1ce2c66810feb";
 
 var dateTime = () => {
     var todayDate = dayjs().format("YYYY-MM-DD");
-    var todayTime = dayjs().format("hh:mm:ss A")
+    var todayTime = dayjs().format("hh:mm A")
     $('#time').html(todayDate + " " + todayTime);
 }
-var locations = [];
+var locations = [
+    {
+        city: ""
+    }
+];
+    
 
 
-var city;
 var lat;
 var lon;
 
@@ -53,17 +57,25 @@ var getLocations = () => {
 
         
 var setCity = () => {
-    locations = getLocations();
-
-    city = $('#citySearch').val();
+    
+    var city = $('#citySearch').val();
     city = city.replaceAll(" ", "");
-    city.toLowerCase();
-    console.log(city);
+    city = city.toLowerCase();
 
-    locations.push({city:city});
-    localStorage.setItem('locations', JSON.stringify(locations));
+    if (typeof locations != 'object'){
+        locations.push({city:city})
+        localStorage.setItem('locations', JSON.stringify(locations));
+    } else {
+        locations = getLocations();
+        console.log(locations)
+        console.log(typeof locations)
+        locations.push({city:city})
+        localStorage.setItem('locations', JSON.stringify(locations));
+    }
+    
+    
 
-    getCoor();
+    // getCoor();
     $('#citySearch').val('');
             
 }
@@ -77,30 +89,30 @@ var setCity = () => {
 //     return JSON.parse(localStorage.getItem('lon'));
 // }
     
-var getCoor = () => {
-    locations = getLocations();
-    for (let i = 0; i < locations.length; i++){
-        if (locations[i].city === city){
-          var geocode = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + ",us&limit=5&appid=" + APIKey;
+// var getCoor = () => {
+//     locations = getLocations();
+//     for (let i = 0; i < locations.length; i++){
+//         if (locations[i].city === city){
+//           var geocode = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + ",us&limit=5&appid=" + APIKey;
         
-            fetch(geocode)
-                .then(function (response){
-                    if (response.ok){
-                    console.log(response);
-                    response.json().then(function(data) {
-                        lon = data[0].lon;
-                        lat = data[0].lat;
-                        locations[i].push({lat: lat});
-                        locations[i].push({lon: lon});
-                        localStorage.setItem('locations', JSON.stringify(locations))
-                        console.log(data);
-                    })
-                }
-            })
-        }
-    }
+//             fetch(geocode)
+//                 .then(function (response){
+//                     if (response.ok){
+//                     console.log(response);
+//                     response.json().then(function(data) {
+//                         lon = data[0].lon;
+//                         lat = data[0].lat;
+//                         locations[i].push({lat: lat});
+//                         locations[i].push({lon: lon});
+//                         localStorage.setItem('locations', JSON.stringify(locations))
+//                         console.log(data);
+//                     })
+//                 }
+//             })
+//         }
+//     }
 // getWeather();  
-}
+// }
 
 // var getWeather = () => {
 //     lat = getLat();
@@ -134,4 +146,5 @@ var getCoor = () => {
 
 // event listener that listens for user click on city search, then starts the function to get city coordinates from geocoding API
 $('#search-btn').on('click', setCity);
+dateTime();
 window.setInterval(dateTime, 1000);
