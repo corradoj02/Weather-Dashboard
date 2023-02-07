@@ -10,8 +10,11 @@ var dateTime = () => {
 }
 var locations = [
 ];
-var locationName = [
 
+var locationName = [
+    {
+
+    }
 ];
     
 
@@ -57,17 +60,20 @@ var setCity = () => {
     console.log(city)
     city = city.replaceAll(" ", "");
     city = city.toLowerCase();
-    localStorage.setItem('city', city)
-    locations = getLocations();
-    console.log(locations)
-    if (!locations.length){
-        locations = getLocations();
-        locations.push({city:city})
-        localStorage.setItem('locations', JSON.stringify(locations));
-    } else {
-        locations.push({city:city})
-        localStorage.setItem('locations', JSON.stringify(locations));
-    };
+    localStorage.setItem('city', city);
+    getLocations();
+    locations = {...locations, city:city};
+    localStorage.setItem('locations', JSON.stringify(locations))
+    
+    console.log(locations.length);
+    // if (locations.length <= 0){
+    //     locations = getLocations();
+    //     locations.push({city:city})
+    //     localStorage.setItem('locations', JSON.stringify(locations));
+    // } else {
+    //     locations.push({city:city})
+    //     localStorage.setItem('locations', JSON.stringify(locations));
+    // };
 
     getCoor();
     
@@ -118,12 +124,17 @@ var getWeatherData = () => {
                 //     localStorage.setItem('locations', JSON.stringify(locations));
                 // };
 
-                getLocationName();
-                getLocationData();
-                console.log(typeof locationName)
-                console.log(locationData.city.name)
-                // locationName['cityName'] = {cityName:locationData.city.name}
-                localStorage.setItem('locationName', JSON.stringify(locationName))
+                
+                locationData = getLocationData();
+                // console.log(typeof locationName)
+                // console.log(locationData.city.name)
+                for (let i = 0; i < locationName.length; i ++){
+                    getLocationName();
+                    console.log(locationName)
+                    locationName[i] = {...locationName, cityName:locationData.city.name};
+                    localStorage.setItem('locationName', JSON.stringify(locationName))
+                }
+                
                 storeWeatherData();
             })
         }
@@ -152,10 +163,10 @@ var storeWeatherData = () => {
     city = getCity();
     console.log(city)
     locations = getLocations();
-    console.log(locations[0])
+    console.log(locations.city)
     locationName = getLocationName();
     for (let i = 0; i < locations.length; i++){
-        if (locations[i].city != city){
+        if (locations.city != city){
             $('#previous').append('<li><button class="btn" data-city="'+city+'">'+locationData.city.name+'</button></li>')
         } else{
             return;
@@ -168,9 +179,10 @@ var storeWeatherData = () => {
 var showPrevious = () => {
     locations = getLocations();
     locationName = getLocationName();
-    if (locations)
-    for (let i = 0; i < locations.length; i ++){
+    if (locations > 0){
+        for (let i = 0; i < locations.length; i ++){
         $('#previous').append('<li><button class="btn" data-city="'+ locations[i].city +'">'+ locationName[i]+'</button></li>')    
+        }
     }
 }
     
@@ -190,6 +202,13 @@ var handler = ( event ) => {
 
 // event listener that listens for user click on city search, then starts the function to get city coordinates from geocoding API
 $('#search-btn').on('click', getCitySearch);
+$('#citySearch').keypress(function(event){
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      getCitySearch(); 
+    }
+    event.stopPropagation();
+});
 dateTime();
 showPrevious();
 window.setInterval(dateTime, 1000);
