@@ -1,0 +1,78 @@
+#citySearch {
+    display: flex;
+    max-width: 12rem;
+    margin-top: 2rem;
+    margin-right: 2rem;
+}
+
+header {
+    text-align: center;
+    border-bottom: solid .3rem black;
+}
+
+#currentForecast {
+    display:flex;
+    font-weight: bolder;
+    font-size: 2rem;
+    position: absolute;
+    top: 7.1rem;
+    left: 15rem;
+    width: 65rem;
+    height: 20rem;
+    visibility: hidden;
+}
+
+#forecasts {
+    /* visibility: hidden; */
+    display: flex;
+    justify-content: row;
+    position: relative;
+    left: 15rem;
+    top: 10rem;
+}
+
+.card {
+    width: 15rem;
+    height: 15rem;
+    font-size: 2rem;
+    height:20rem;
+    width:20rem;
+
+}
+
+#icon {
+    position: relative;
+    width: 5rem;
+    height: 5rem;
+}
+#max, #min, #humid, #wind{
+    font-size: 1rem;
+
+}
+ul{
+    list-style:none;
+    display:flex;
+    flex-direction: column;
+}
+
+.btn {
+    background-color: #0096c7;
+    border-color: #0096c7;
+    color:white;
+    margin-top:1rem;
+}
+#recent {
+    border-bottom: solid .2rem black;
+    width: 10rem;
+    margin-bottom: 2rem;
+}
+
+.recent {
+    position: relative;
+    left: -1.7rem;
+    width: 10rem;
+}
+
+.btn:hover {
+    background-color: grey;
+}
