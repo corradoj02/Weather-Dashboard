@@ -1,23 +1,48 @@
+body {
+    background-color:#61a5c2;
+    color: white;
+}
+
+.five-day{
+    position: absolute;
+    left: 15.5rem;
+    border-bottom: solid white;
+    visibility: hidden;
+}
+
 #citySearch {
     display: flex;
+    position:relative;
+    left:.5rem;
     max-width: 12rem;
     margin-top: 2rem;
     margin-right: 2rem;
+    border: solid lightgray;
 }
 
+.form-floating{
+    color:black;
+}
+
+#search-btn{
+    position: relative;
+    left: .5rem;
+}
 header {
     text-align: center;
-    border-bottom: solid .3rem black;
+    border-bottom: solid .3rem lightgray;
 }
 
 #currentForecast {
+    background-color: #61a5c2;
+    border: solid lightgray;
     display:flex;
     font-weight: bolder;
     font-size: 2rem;
     position: absolute;
     top: 7.1rem;
     left: 15rem;
-    width: 65rem;
+    width: 79rem;
     height: 20rem;
     visibility: hidden;
 }
@@ -28,16 +53,29 @@ header {
     justify-content: row;
     position: relative;
     left: 15rem;
-    top: 10rem;
+    top: 12rem;
+    visibility: hidden;
+}
+#forecasts div{
+    font-size:1.5rem;
+    background-color: #61a5c2;
+}
+.city img{
+    height:2rem;
+    width: 2rem;
 }
 
 .card {
+    display:flex;
+    align-items: center;
     width: 15rem;
     height: 15rem;
     font-size: 2rem;
     height:20rem;
-    width:20rem;
-
+    width:15rem;
+    top:-9.7rem;
+    margin:.5rem;
+    border: solid lightgray;
 }
 
 #icon {
@@ -49,6 +87,7 @@ header {
     font-size: 1rem;
 
 }
+
 ul{
     list-style:none;
     display:flex;
@@ -62,7 +101,7 @@ ul{
     margin-top:1rem;
 }
 #recent {
-    border-bottom: solid .2rem black;
+    border-bottom: solid .2rem lightgray;
     width: 10rem;
     margin-bottom: 2rem;
 }
@@ -75,4 +114,10 @@ ul{
 
 .btn:hover {
     background-color: grey;
+}
+
+li button  {
+    position:relative;
+    width:10rem;
+    left: -2rem;
 }
