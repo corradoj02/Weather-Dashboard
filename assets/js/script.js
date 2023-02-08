@@ -68,7 +68,7 @@ var getCitySearch = () =>{
 // function that takes in the locally stored results from the getCity() function to remove any spaces and ensures it's lowercase for running the geocode API fetch, locally stores it again, 
 //and then runs the getCoor() function to get the coordinates for the city. It then clears the search bar
 var setCity = () => {
-    city = getCity();
+    getCity();
     city = city.replaceAll(" ", "");
     city = city.toLowerCase();
     localStorage.setItem('city', city);
@@ -114,8 +114,9 @@ var getWeatherData = () => {
                 locationData = getLocationData();
                 locationData = data;
                 localStorage.setItem('locationData', JSON.stringify(locationData))
-                storeWeatherData();
                 
+                
+                checkCity();
             })
         }
     })
@@ -159,11 +160,12 @@ var storeWeatherData = () => {
 
 // function to run check on locally stored locationName list, and if the current city name hasn't already been added to the list, pushes that city to the list then re-stores the list and moves to the checkLocation() function
 var checkCity = () =>{
-    city = getCity();
+    getCity();
     getLocationName();
-    var count = 0;
+
+   var count = 0;
     for (let i = 0; i < locationName.length; i ++){
-        
+         
         if (locationName[i] === city){
             count ++;
             break;
@@ -180,8 +182,9 @@ var checkCity = () =>{
 // function to run check on locally stored locations list, and if the current city name hasn't already been added to the list, pushes that city to the list then re-stores the list and moves to the placeForecast() function
 var checkLocation = () =>{
     getLocations();
-    locationData = getLocationData();
-    var count = 0;
+    getLocationData();
+    
+   var count = 0;
     for (let i = 0; i < locations.length; i ++){
         
         if (locations[i] === locationData.city.name){
@@ -193,13 +196,13 @@ var checkLocation = () =>{
         locations.push(locationData.city.name);
         localStorage.setItem('locations', JSON.stringify(locations))  
     }
-    placeForecast();
+    storeWeatherData();
 };
 
 // function to generate buttoned list from previous searches that were locally stored
 var showPrevious = () => {
-    locations = getLocations();
-    locationName = getLocationName();
+    getLocations();
+    getLocationName();
 
     $('ul').empty();
 
