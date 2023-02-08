@@ -201,15 +201,15 @@ var checkLocation = () =>{
 
 // function to generate buttoned list from previous searches that were locally stored
 var showPrevious = () => {
-    getLocations();
-    getLocationName();
+    locations = getLocations();
+    locationName = getLocationName();
 
     $('ul').empty();
 
     if (locations.length > 0){
         for (let i = 0; i < locations.length; i ++){
             $('ul').append('<li><button class="btn recent" data-name="' + locationName[i] + '">' + locations[i] + '</button></li>');
-        }return;
+        } return;
     }
 };
 
