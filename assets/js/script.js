@@ -29,12 +29,12 @@ var locationData;
 
 // function that grabs and returns the locations list from local storage
 var getLocations = () => {
-   return  JSON.parse(localStorage.getItem('locations'));
+   return  JSON.parse(localStorage.getItem('locations')) || [];
 }
 
 // function that grabs and returns the locationName list from local storage
 var getLocationName = () => {
-    return JSON.parse(localStorage.getItem('locationName'));
+    return JSON.parse(localStorage.getItem('locationName')) || [];
  }
 
 // function that grabs and returns the lat variable from local storage
@@ -124,36 +124,44 @@ var getWeatherData = () => {
 };
 
 // function to take in the API data that was locally stored to locationData, and then makes the card elements visible and inserts the data in to their respective id's
-var storeWeatherData = () => {
+var storeWeatherData = (locationData) => {
     locationData = getLocationData();
     var iconUrl = "http://openweathermap.org/img/w/";
     $('#currentForecast').css('visibility', 'visible');
     $('#forecasts').css('visibility', 'visible');
     $('.five-day').css('visibility', 'visible');
-    var listCount = 0; 
+    // var listCount = 0; 
     var lists = locationData.list;
 
-    $('#city').html(locationData.city.name + " - " + dayjs().format("MMM DD YYYY"));
+    $('#city').html(locationData.city.name + " - " + dayjs().format('MMM DD YYYY'));
     $('#icon').attr('src', iconUrl+locationData.list[0].weather[0].icon+'.png');
     $('#description').html(locationData.list[0].weather[0].main)
-    $('#current-temp').html(locationData.list[0].main.temp + "ºF");
-    $('#max').html("High: " + locationData.list[0].main.temp_max + "ºF");
-    $('#min').html("Low: " + locationData.list[0].main.temp_min + "ºF");
-    $('#humid').html("Humidity: " + locationData.list[0].main.humidity);
-    $('#wind').html("Wind: " + locationData.list[0].wind.speed);
+    $('#current-temp').html(locationData.list[0].main.temp + 'ºF');
+    $('#max').html('High: ' + locationData.list[0].main.temp_max + 'ºF');
+    $('#min').html('Low: ' + locationData.list[0].main.temp_min + 'ºF');
+    $('#humid').html('Humidity: ' + locationData.list[0].main.humidity + '%');
+    $('#wind').html('Wind: ' + locationData.list[0].wind.speed);
     
-    $('#forecasts div').each( function (i) {
-        $('#city-'+i).html(locationData.city.name + " - " + dayjs(lists[listCount]?.dt_txt).format('MMM DD'));
-        $('#icon-'+i).attr('src', iconUrl+lists[listCount]?.weather[0].icon+'.png');
-        $('#description-'+i).html(lists[listCount]?.weather[0].main)
-        $('#current-temp-'+i).html(lists[listCount]?.main.temp + "ºF");
-        $('#max-'+i).html("High: " + locationData["list"][listCount]?.main.temp_max + "ºF");
-        $('#min-'+i).html("Low: " + locationData["list"][listCount]?.main.temp_min + "ºF");
-        $('#humid-'+i).html("Humidity: " + locationData["list"][listCount]?.main.humidity);
-        $('#wind-'+i).html("Wind: " + locationData["list"][listCount]?.wind.speed);
-        listCount += 7;
+        
+        
             
-    })
+            
+        $('#forecasts').empty();
+        $(".five-day").html('5-Day Forecast For '+ locationData.city.name+':');
+        for (var i = 0; i < lists.length; i++) {
+            if (lists[i].dt_txt.indexOf("15:00:00") !== -1) {
+                var cityDate = $('<h3>').addClass('card-title').text(dayjs(lists[i].dt_txt).format('MMM DD'));
+                var weatherIcon = $('<img>').attr('src', 'https://openweathermap.org/img/w/' + lists[i].weather[0].icon + '.png');
+                var makeCard = $('<div>').addClass('card city').attr('id', 'forecast-'+i);
+                var humidity = $('<div>').attr('id', 'humid').text('Humidity: ' + lists[i].main.humidity + '%');
+                var currentTemp = $('<div>').attr('id', 'five-temp').text(lists[i].main.temp + '°F');
+                var maxTemp = $('<div>').attr('id', 'max').text('Max: ' + lists[i].main.temp_max + '°F');
+                var minTemp = $('<div>').attr('id', 'min').text('Min: ' + lists[i].main.temp_min + '°F');
+                var windSpeed = $('<div>').attr('id', 'wind').text('Wind: ' + lists[i].wind.speed)
+                makeCard.append(cityDate, weatherIcon, currentTemp, maxTemp, minTemp, humidity, windSpeed);
+                $("#forecasts").append(makeCard);
+            }
+        }
     showPrevious();
 };
 
@@ -163,19 +171,18 @@ var checkCity = () =>{
     getCity();
     getLocationName();
 
-   var count = 0;
+    var count = 0; 
     for (let i = 0; i < locationName.length; i ++){
-         
+        
         if (locationName[i] === city){
             count ++;
             break;
-        }
-    }
+        } }   
         if (count <= 0){
             locationName.push(city);
             localStorage.setItem('locationName', JSON.stringify(locationName))  
             }
-
+      
     checkLocation();
 };
 
@@ -192,7 +199,8 @@ var checkLocation = () =>{
             break;
         }
     }
-    if (count <= 0){
+
+    if (count <= 0 ){
         locations.push(locationData.city.name);
         localStorage.setItem('locations', JSON.stringify(locations))  
     }
@@ -201,16 +209,14 @@ var checkLocation = () =>{
 
 // function to generate buttoned list from previous searches that were locally stored
 var showPrevious = () => {
-    locations = getLocations();
     locationName = getLocationName();
-
+    locations = getLocations();
+    
     $('ul').empty();
-
-    if (locations.length > 0){
-        for (let i = 0; i < locations.length; i ++){
-            $('ul').append('<li><button class="btn recent" data-name="' + locationName[i] + '">' + locations[i] + '</button></li>');
-        } return;
-    }
+    for (let i = 0; i < locations.length; i ++){
+        $('ul').append('<li><button class="btn recent" data-name="' + locationName[i] + '">' + locations[i] + '</button></li>');
+    } return;
+    
 };
 
 
@@ -238,4 +244,4 @@ dateTime();
 // runs the showPrevious() function to generate the recent search buttons from local storage on page reload
 showPrevious();
 // resets the clock every second to get real time
-window.setInterval(dateTime, 1000);
+window.setInterval(dateTime, 1000)
