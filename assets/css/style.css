@@ -4,12 +4,12 @@ body {
 }
 
 .five-day{
-    position: relative;
-    top:8rem;
+    position: absolute;
+    top:30rem;
     left: 15.5rem;
     border-bottom: solid white;
     visibility: hidden;
-    width:79rem;
+    width:85rem;
 }
 
 #citySearch {
@@ -36,7 +36,7 @@ header {
 }
 
 #currentForecast {
-    background-color: #61a5c2;
+    background-color: #0096c7;
     border: solid lightgray;
     display:flex;
     font-weight: bolder;
@@ -44,7 +44,7 @@ header {
     position: absolute;
     top: 7.1rem;
     left: 15rem;
-    width: 79rem;
+    width: 85rem;
     height: 20rem;
     visibility: hidden;
 }
@@ -52,14 +52,15 @@ header {
 #forecasts {
     display: flex;
     justify-content: row;
-    position: relative;
-    left: 15rem;
-    top: 18rem;
+    align-items: flex-start;
+    position: absolute;
+    left: -1rem;
+    top: 45rem;
     visibility: hidden;
 }
 #forecasts div{
     font-size:1.5rem;
-    background-color: #61a5c2;
+    background-color: #0096c7;
 }
 .city img{
     height:2rem;
@@ -84,9 +85,12 @@ header {
     width: 5rem;
     height: 5rem;
 }
-#max, #min, #humid, #wind{
+#max, #min, #humid, #wind, #five-temp{
     font-size: 1rem;
 
+}
+#five-temp {
+    width: 100%
 }
 
 ul{
@@ -121,4 +125,14 @@ li button  {
     position:relative;
     width:10rem;
     left: -2rem;
+}
+#forecasts .city {
+    display: flex;
+    position: relative;
+    left:18rem;
+    max-width: 85rem;
+}
+
+#five-temp {
+    text-align: center;
 }
