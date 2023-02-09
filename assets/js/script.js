@@ -57,6 +57,7 @@ var getCity = () => {
     return localStorage.getItem('city');
 }
 
+
 // function that takes in user input value from the search bar and locally stores it. it then runs the setCity() function to start the process to fetch API data
 var getCitySearch = () =>{
     city = $('#citySearch').val();
@@ -74,29 +75,33 @@ var setCity = () => {
     localStorage.setItem('city', city);
 
     getCoor();
-    
     $('#citySearch').val('');        
 }
+
+
 
 // function that uses the saved city value from the setCity() function, and puts the city value and API key into the geocode API query url, then fetches the response to get longitude and latitude
 // coordinates from the city and state entered. it saves the coordinates to local storage then moves to the getWeatherData() function
 var getCoor = () => {
+
     var geocode = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + ",us&limit=5&appid=" + APIKey;
-        fetch(geocode)
-            .then(function (response){
-                if (response.ok){
-                    // console.log(response);
-                    response.json().then(function(data) {
-                    // console.log(data);
-                    lon = data[0].lon;
-                    localStorage.setItem('lon', JSON.stringify(lon));
-                    lat = data[0].lat;
-                    localStorage.setItem('lat', JSON.stringify(lat))
-                    getWeatherData(); 
-                    })
-                }
-            })
+
+    fetch(geocode)
+        .then(function (response){
+            if (response.ok){
+                // console.log(response);
+                response.json().then(function(data) {
+                // console.log(data);
+                lon = data[0].lon;
+                localStorage.setItem('lon', JSON.stringify(lon));
+                lat = data[0].lat;
+                localStorage.setItem('lat', JSON.stringify(lat))
+                getWeatherData(); 
+                })
+            }
+        })
 };
+
 
 // function that takes in the locally stores longitutde and latitude values from getCoor() function, and inserts the into the query url to fetch the results from the API and stores them locally
 //to the locationData list. From here it moves on the the storeWeatherData() function
@@ -114,14 +119,13 @@ var getWeatherData = () => {
                 locationData = getLocationData();
                 locationData = data;
                 localStorage.setItem('locationData', JSON.stringify(locationData))
-                
-                
                 checkCity();
             })
         }
     })
     
 };
+
 
 // function to take in the API data that was locally stored to locationData, and then makes the card elements visible and inserts the data in to their respective id's
 var storeWeatherData = (locationData) => {
@@ -130,7 +134,6 @@ var storeWeatherData = (locationData) => {
     $('#currentForecast').css('visibility', 'visible');
     $('#forecasts').css('visibility', 'visible');
     $('.five-day').css('visibility', 'visible');
-    // var listCount = 0; 
     var lists = locationData.list;
 
     $('#city').html(locationData.city.name + " - " + dayjs().format('MMM DD YYYY'));
@@ -141,27 +144,24 @@ var storeWeatherData = (locationData) => {
     $('#min').html('Low: ' + locationData.list[0].main.temp_min + 'ºF');
     $('#humid').html('Humidity: ' + locationData.list[0].main.humidity + '%');
     $('#wind').html('Wind: ' + locationData.list[0].wind.speed);
-    
-        
-        
+
             
-            
-        $('#forecasts').empty();
-        $(".five-day").html('5-Day Forecast For '+ locationData.city.name+':');
-        for (var i = 0; i < lists.length; i++) {
-            if (lists[i].dt_txt.indexOf("15:00:00") !== -1) {
-                var cityDate = $('<h3>').addClass('card-title').text(dayjs(lists[i].dt_txt).format('MMM DD'));
-                var weatherIcon = $('<img>').attr('src', 'https://openweathermap.org/img/w/' + lists[i].weather[0].icon + '.png');
-                var makeCard = $('<div>').addClass('card city').attr('id', 'forecast-'+i);
-                var humidity = $('<div>').attr('id', 'humid').text('Humidity: ' + lists[i].main.humidity + '%');
-                var currentTemp = $('<div>').attr('id', 'five-temp').text(lists[i].main.temp + '°F');
-                var maxTemp = $('<div>').attr('id', 'max').text('Max: ' + lists[i].main.temp_max + '°F');
-                var minTemp = $('<div>').attr('id', 'min').text('Min: ' + lists[i].main.temp_min + '°F');
-                var windSpeed = $('<div>').attr('id', 'wind').text('Wind: ' + lists[i].wind.speed)
-                makeCard.append(cityDate, weatherIcon, currentTemp, maxTemp, minTemp, humidity, windSpeed);
-                $("#forecasts").append(makeCard);
-            }
+    $('#forecasts').empty();
+    $(".five-day").html('5-Day Forecast For '+ locationData.city.name+':');
+    for (var i = 0; i < lists.length; i++) {
+        if (lists[i].dt_txt.indexOf("15:00:00") !== -1) {
+            var cityDate = $('<h3>').addClass('card-title').text(dayjs(lists[i].dt_txt).format('MMM DD'));
+            var weatherIcon = $('<img>').attr('src', 'https://openweathermap.org/img/w/' + lists[i].weather[0].icon + '.png');
+            var makeCard = $('<div>').addClass('card city').attr('id', 'forecast-'+i);
+            var humidity = $('<div>').attr('id', 'humid').text('Humidity: ' + lists[i].main.humidity + '%');
+            var currentTemp = $('<div>').attr('id', 'five-temp').text(lists[i].main.temp + '°F');
+            var maxTemp = $('<div>').attr('id', 'max').text('Max: ' + lists[i].main.temp_max + '°F');
+            var minTemp = $('<div>').attr('id', 'min').text('Min: ' + lists[i].main.temp_min + '°F');
+            var windSpeed = $('<div>').attr('id', 'wind').text('Wind: ' + lists[i].wind.speed)
+            makeCard.append(cityDate, weatherIcon, currentTemp, maxTemp, minTemp, humidity, windSpeed);
+            $("#forecasts").append(makeCard);
         }
+    }
     showPrevious();
 };
 
@@ -173,39 +173,39 @@ var checkCity = () =>{
 
     var count = 0; 
     for (let i = 0; i < locationName.length; i ++){
-        
         if (locationName[i] === city){
             count ++;
             break;
-        } }   
-        if (count <= 0){
-            locationName.push(city);
-            localStorage.setItem('locationName', JSON.stringify(locationName))  
-            }
-      
+        } 
+    }   
+    if (count <= 0){
+        locationName.push(city);
+        localStorage.setItem('locationName', JSON.stringify(locationName))  
+    }
     checkLocation();
 };
+
 
 // function to run check on locally stored locations list, and if the current city name hasn't already been added to the list, pushes that city to the list then re-stores the list and moves to the placeForecast() function
 var checkLocation = () =>{
     getLocations();
     getLocationData();
     
-   var count = 0;
+    var count = 0;
     for (let i = 0; i < locations.length; i ++){
-        
         if (locations[i] === locationData.city.name){
             count ++;
             break;
         }
     }
-
     if (count <= 0 ){
         locations.push(locationData.city.name);
         localStorage.setItem('locations', JSON.stringify(locations))  
     }
     storeWeatherData();
 };
+
+
 
 // function to generate buttoned list from previous searches that were locally stored
 var showPrevious = () => {
@@ -215,13 +215,14 @@ var showPrevious = () => {
     $('ul').empty();
     for (let i = 0; i < locations.length; i ++){
         $('ul').append('<li><button class="btn recent" data-name="' + locationName[i] + '">' + locations[i] + '</button></li>');
-    } return;
-    
+    } 
+    return;
 };
 
 
 // event listener that listens for user click on city search, then starts the function to get city coordinates from geocoding API
 $('#search-btn').on('click', getCitySearch);
+
 
 // event listener for buttons generated from recent searches
 $(document).on('click', '.recent', function(event){ 
@@ -231,6 +232,7 @@ $(document).on('click', '.recent', function(event){
     event.stopPropagation();
 }); 
 
+
 // event listener to use the enter key for search
 $('#citySearch').keypress(function(event){
     var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -239,6 +241,8 @@ $('#citySearch').keypress(function(event){
     }
     event.stopPropagation();
 });
+
+
 // runs the dateTime() function to display the day and time (to the minute) at the header
 dateTime();
 // runs the showPrevious() function to generate the recent search buttons from local storage on page reload
