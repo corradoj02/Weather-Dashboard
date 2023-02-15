@@ -84,7 +84,7 @@ var setCity = () => {
 // coordinates from the city and state entered. it saves the coordinates to local storage then moves to the getWeatherData() function
 var getCoor = () => {
 
-    var geocode = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + ",us&limit=5&appid=" + APIKey;
+    var geocode = "https://api.openweathermap.org/geo/1.0/direct?q=" + city + ",us&limit=5&appid=" + APIKey;
 
     fetch(geocode)
         .then(function (response){
@@ -130,7 +130,7 @@ var getWeatherData = () => {
 // function to take in the API data that was locally stored to locationData, and then makes the card elements visible and inserts the data in to their respective id's
 var storeWeatherData = (locationData) => {
     locationData = getLocationData();
-    var iconUrl = "http://openweathermap.org/img/w/";
+    var iconUrl = "https://openweathermap.org/img/w/";
     $('#currentForecast').css('visibility', 'visible');
     $('#forecasts').css('visibility', 'visible');
     $('.five-day').css('visibility', 'visible');
